@@ -16,7 +16,7 @@
 
 #include <string.h>
 
-#include "build/Protocol/Client.pb.h"
+#include "Client.pb.h"
 #include "Core/Buffer.h"
 #include "Core/ProtoBuf.h"
 #include "Core/Time.h"
