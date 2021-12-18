@@ -10,8 +10,9 @@ set(PACKAGE_URL "https://github.com/logcabin/logcabin")
 
 project(${PACKAGE_NAME} VERSION ${PACKAGE_VERSION} LANGUAGES CXX)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 include(cmake/CompileOptions.cmake)
 include(cmake/Dependencies.cmake)
@@ -25,6 +26,7 @@ extract_source(FOLDER Event)
 extract_source(FOLDER Server EXCLUDE ".Main.cc")
 extract_source(FOLDER Storage EXCLUDE ".Tool.cc")
 extract_source(FOLDER Tree)
+extract_source(FOLDER Examples)
 
 add_library(${PACKAGE_NAME} STATIC
             ${Core_SOURCE}
@@ -43,3 +45,9 @@ add_executable(ServerControl Client/ServerControl.cc)
 target_link_libraries(LogCabin ${PACKAGE_NAME} ${CABIN_COMMON_LIBRARIES})
 target_link_libraries(StorageTool ${PACKAGE_NAME} ${CABIN_COMMON_LIBRARIES})
 target_link_libraries(ServerControl ${PACKAGE_NAME} ${CABIN_COMMON_LIBRARIES})
+
+foreach(Example ${Examples_SOURCE} ${Examples_SOURCE_TESTS})
+    get_filename_component(EXAMPLE_NAME ${Example} NAME_WE)
+    add_executable(${EXAMPLE_NAME} Examples/${EXAMPLE_NAME}.cc)
+    target_link_libraries(${EXAMPLE_NAME} ${PACKAGE_NAME} ${CABIN_COMMON_LIBRARIES})
+endforeach()
