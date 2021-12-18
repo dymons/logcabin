@@ -12,3 +12,13 @@ project(${PACKAGE_NAME} VERSION ${PACKAGE_VERSION} LANGUAGES CXX)
 
 include(cmake/CompileOptions.cmake)
 include(cmake/ProtobufDependencies.cmake)
+include(cmake/Functions.cmake)
+
+extract_source(Core)
+extract_source(Client)
+extract_source(RPC)
+extract_source(Event)
+extract_source(Server)
+extract_source(Storage)
+extract_source(Tree)
+extract_source(Examples)
