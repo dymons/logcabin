@@ -11,9 +11,10 @@ set(PACKAGE_URL "https://github.com/logcabin/logcabin")
 project(${PACKAGE_NAME} VERSION ${PACKAGE_VERSION} LANGUAGES CXX)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 include(cmake/CompileOptions.cmake)
+include(cmake/Dependencies.cmake)
 include(cmake/ProtobufDependencies.cmake)
 include(cmake/Functions.cmake)
 
@@ -34,3 +35,11 @@ add_library(${PACKAGE_NAME} STATIC
             ${Storage_SOURCE}
             ${Tree_SOURCE})
 target_link_libraries(${PACKAGE_NAME} PRIVATE ${PACKAGE_NAME}-proto)
+
+add_executable(LogCabin Server/Main.cc)
+add_executable(StorageTool Storage/Tool.cc)
+add_executable(ServerControl Client/ServerControl.cc)
+
+target_link_libraries(LogCabin ${PACKAGE_NAME} ${CABIN_COMMON_LIBRARIES})
+target_link_libraries(StorageTool ${PACKAGE_NAME} ${CABIN_COMMON_LIBRARIES})
+target_link_libraries(ServerControl ${PACKAGE_NAME} ${CABIN_COMMON_LIBRARIES})
