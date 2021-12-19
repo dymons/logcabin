@@ -19,9 +19,11 @@
  * snapshots.
  */
 
+syntax = "proto2";
+
 package LogCabin.Server.SnapshotStateMachine;
 
-import "build/Protocol/Client.proto";
+import "Client.proto";
 
 /**
  * An entry in the version history table.

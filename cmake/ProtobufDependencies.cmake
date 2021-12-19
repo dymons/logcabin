@@ -1,0 +1,21 @@
+set(CABIN_PROTO_FOLDERS "Core" "Protocol" "Server" "Storage" "Tree")
+set(PROTO "")
+set(PROTO_HEADERS "")
+set(PROTO_SOURCES "")
+foreach(PROTO_FOLDER_PATH ${CABIN_PROTO_FOLDERS})
+    file(GLOB PROTO_FILES "${PROTO_FOLDER_PATH}/*.proto")
+    foreach(PROTO_FILE ${PROTO_FILES})
+        get_filename_component(PROTO_FILE_NAME ${PROTO_FILE} NAME_WE)
+        get_filename_component(PROTO_FILE_PATH ${PROTO_FILE} ABSOLUTE)
+
+        set(PROTO ${PROTO} "${PROTO_FILE_NAME}.proto")
+        set(PROTO_HEADERS ${PROTO_HEADERS} "${CMAKE_CURRENT_BINARY_DIR}/${PROTO_FILE_NAME}.pb.h")
+        set(PROTO_SOURCES ${PROTO_SOURCES} "${CMAKE_CURRENT_BINARY_DIR}/${PROTO_FILE_NAME}.pb.cc")
+    endforeach()
+endforeach()
+
+list(TRANSFORM CABIN_PROTO_FOLDERS PREPEND "--proto_path=${CMAKE_CURRENT_SOURCE_DIR}/")
+add_custom_command(OUTPUT ${PROTO_HEADERS} ${PROTO_SOURCES}
+                   COMMAND protoc ${CABIN_PROTO_FOLDERS} --cpp_out=${CMAKE_CURRENT_BINARY_DIR} ${PROTO})
+add_library(${PACKAGE_NAME}-proto ${PROTO_HEADERS} ${PROTO_SOURCES})
+target_link_libraries(${PACKAGE_NAME}-proto protobuf::libprotobuf)

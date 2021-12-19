@@ -1,0 +1,17 @@
+include(CMakeParseArguments)
+
+function(EXTRACT_SOURCE)
+    set(folder FOLDER RENAME)
+    set(excludes EXCLUDE CONFIGURATIONS)
+    cmake_parse_arguments(EXTRACT_SOURCE "${options}" "${folder}" "${excludes}" ${ARGN})
+
+    file(GLOB ${EXTRACT_SOURCE_FOLDER}_SOURCE "${EXTRACT_SOURCE_FOLDER}/*.cc")
+    file(GLOB ${EXTRACT_SOURCE_FOLDER}_SOURCE_TESTS "${EXTRACT_SOURCE_FOLDER}/*Test.cc")
+    list(FILTER ${EXTRACT_SOURCE_FOLDER}_SOURCE EXCLUDE REGEX ".*Test.cc")
+    foreach(Exclude ${EXTRACT_SOURCE_EXCLUDE})
+        list(FILTER ${EXTRACT_SOURCE_FOLDER}_SOURCE EXCLUDE REGEX "${Exclude}")
+    endforeach()
+
+    set(${EXTRACT_SOURCE_FOLDER}_SOURCE ${${EXTRACT_SOURCE_FOLDER}_SOURCE} PARENT_SCOPE)
+    set(${EXTRACT_SOURCE_FOLDER}_SOURCE_TESTS ${${EXTRACT_SOURCE_FOLDER}_SOURCE_TESTS} PARENT_SCOPE)
+endfunction()

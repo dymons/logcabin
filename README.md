@@ -55,26 +55,25 @@ Pre-requisites:
 
 In short, RHEL/CentOS 6 should work, as well as anything more recent.
 
+The following packages are required (feel free to cut and paste the apt-get command below):
+    
+    sudo apt-get update
+    sudo apt-get install \
+        doxygen \
+        libcrypto++-dev \
+        libcrypto++-doc \
+        libcrypto++-utils
+
 Get the source code:
 
     git clone git://github.com/logcabin/logcabin.git
     cd logcabin
     git submodule update --init
 
-
 Build the client library, server binary, and unit tests:
 
-    scons
-
-For custom build environments, you can place your configuration variables in
-`Local.sc`. For example, that file might look like:
-
-    BUILDTYPE='DEBUG'
-    CXXFLAGS=['-Wno-error']
-
-To see which configuration parameters are available, run:
-
-    scons --help
+    mkdir build && cd build
+    cmake .. && cmake --build .
 
 Running basic tests
 ===================
@@ -87,7 +86,7 @@ You can also run some system-wide tests. This first command runs the smoke
 tests against an in-memory database that is embedded into the LogCabin client
 (no servers are involved):
 
-    build/Examples/SmokeTest --mock && echo 'Smoke test completed successfully'
+    build/SmokeTest --mock && echo 'Smoke test completed successfully'
 
 To run the same smoke test against a real LogCabin cluster will take some more
 setup.
@@ -157,7 +156,7 @@ Now use the reconfiguration command to add the second and third servers to the
 cluster:
 
     ALLSERVERS=127.0.0.1:5254,127.0.0.1:5255,127.0.0.1:5256
-    build/Examples/Reconfigure --cluster=$ALLSERVERS set 127.0.0.1:5254 127.0.0.1:5255 127.0.0.1:5256
+    build/Reconfigure --cluster=$ALLSERVERS set 127.0.0.1:5254 127.0.0.1:5255 127.0.0.1:5256
 
 This `Reconfigure` command is a special LogCabin client. It first queries each
 of the servers given in its positional command line arguments (space-delimited
@@ -196,13 +195,13 @@ symptoms and a workaround.
 
 Finally, you can run a LogCabin client to exercise the cluster:
 
-    build/Examples/HelloWorld --cluster=$ALLSERVERS
+    build/HelloWorld --cluster=$ALLSERVERS
 
 That program doesn't do anything very interesting. Another tool called
 TreeOps exposes LogCabin's data structure on the command line:
 
-    echo -n hello | build/Examples/TreeOps --cluster=$ALLSERVERS write /world
-    build/Examples/TreeOps --cluster=$ALLSERVERS dump
+    echo -n hello | build/TreeOps --cluster=$ALLSERVERS write /world
+    build/TreeOps --cluster=$ALLSERVERS dump
 
 See the --help for a complete listing of the available commands.
 
@@ -262,7 +261,7 @@ Documentation
 
 To build the documentation from the source code, run:
 
-    scons docs
+    make docs
 
 The resulting HTML files will be placed in `docs/doxygen`.
 
@@ -273,23 +272,7 @@ Installation
 
 To install a bunch of things on your filesystem, run:
 
-    scons install
-
-Along with the binaries, this installs a RHEL 6-compatible init script.
-
-If you don't want these files to pollute your filesystem, you can install the files
-to any given directory as follows (replace `pathtoinstallprefix` in both places
-with wherever you'd like the files to go):
-
-    scons --install-sandbox=pathtoinstallprefix pathtoinstallprefix
-
-Finally, you can build a binary RPM as follows:
-
-    scons rpm
-
-This creates a file called `build/logcabin-0.0.1-0.1.alpha.0.x86_64.rpm` or
-similar that you can then install using RPM, with the same effect as `scons
-install`.
+    make install
 
 Contributing
 ============
