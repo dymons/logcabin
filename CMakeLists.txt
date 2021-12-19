@@ -51,3 +51,8 @@ foreach(Example ${Examples_SOURCE} ${Examples_SOURCE_TESTS})
     add_executable(${EXAMPLE_NAME} Examples/${EXAMPLE_NAME}.cc)
     target_link_libraries(${EXAMPLE_NAME} ${PACKAGE_NAME} ${CABIN_COMMON_LIBRARIES})
 endforeach()
+
+add_custom_target(check COMMAND scripts/cpplint.py)
+add_custom_target(lint COMMAND scripts/cpplint.py)
+add_custom_target(docs COMMAND doxygen docs/Doxyfile)
+add_custom_target(tags COMMAND ctags -R --exclude=build --exclude=docs --exclude=CMakeFiles .)
