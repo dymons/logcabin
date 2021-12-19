@@ -76,6 +76,11 @@ To see which configuration parameters are available, run:
 
     scons --help
 
+In addition, you can use the cmake build tool to build a project:
+
+    mkdir build && cd build
+    cmake .. && cmake --build .
+
 Running basic tests
 ===================
 
@@ -87,7 +92,7 @@ You can also run some system-wide tests. This first command runs the smoke
 tests against an in-memory database that is embedded into the LogCabin client
 (no servers are involved):
 
-    build/Examples/SmokeTest --mock && echo 'Smoke test completed successfully'
+    build/SmokeTest --mock && echo 'Smoke test completed successfully'
 
 To run the same smoke test against a real LogCabin cluster will take some more
 setup.
@@ -157,7 +162,7 @@ Now use the reconfiguration command to add the second and third servers to the
 cluster:
 
     ALLSERVERS=127.0.0.1:5254,127.0.0.1:5255,127.0.0.1:5256
-    build/Examples/Reconfigure --cluster=$ALLSERVERS set 127.0.0.1:5254 127.0.0.1:5255 127.0.0.1:5256
+    build/Reconfigure --cluster=$ALLSERVERS set 127.0.0.1:5254 127.0.0.1:5255 127.0.0.1:5256
 
 This `Reconfigure` command is a special LogCabin client. It first queries each
 of the servers given in its positional command line arguments (space-delimited
@@ -196,13 +201,13 @@ symptoms and a workaround.
 
 Finally, you can run a LogCabin client to exercise the cluster:
 
-    build/Examples/HelloWorld --cluster=$ALLSERVERS
+    build/HelloWorld --cluster=$ALLSERVERS
 
 That program doesn't do anything very interesting. Another tool called
 TreeOps exposes LogCabin's data structure on the command line:
 
-    echo -n hello | build/Examples/TreeOps --cluster=$ALLSERVERS write /world
-    build/Examples/TreeOps --cluster=$ALLSERVERS dump
+    echo -n hello | build/TreeOps --cluster=$ALLSERVERS write /world
+    build/TreeOps --cluster=$ALLSERVERS dump
 
 See the --help for a complete listing of the available commands.
 
